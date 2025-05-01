@@ -57,6 +57,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+      ),
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -125,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: "Don't have an account? ",
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.white,
+                      fontSize: 20
                     ),
                     children: [
                       TextSpan(
