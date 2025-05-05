@@ -120,25 +120,24 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(description),
-                      FutureBuilder<AggregateQuerySnapshot>(
-                          future: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(user!.uid)
-                              .collection('projects')
-                              .doc(project.id)
-                              .collection('tasks')
-                              .count()
-                              .get(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Text('Loading...');
-                            } else if (snapshot.hasError) {
-                              return Text('Error');
-                            } else {
-                              final count = snapshot.data?.count ?? 0;
-                              return Text('$count', style: TextStyle(fontSize: 20),);
-                            }
-                          },
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user!.uid)
+                            .collection('projects')
+                            .doc(project.id)
+                            .collection('tasks')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Text('Loading...');
+                          } else if (snapshot.hasError) {
+                            return const Text('Error');
+                          } else {
+                            final count = snapshot.data?.docs.length ?? 0;
+                            return Text('$count', style: TextStyle(fontSize: 20),);
+                          }
+                        },
                       )
                     ],
                   ),
