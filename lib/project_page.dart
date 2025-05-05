@@ -20,17 +20,28 @@ class _ProjectPageState extends State<ProjectPage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
+
   Future<void> addTask() async {
     final TextEditingController taskTitleController = TextEditingController();
+    final TextEditingController taskDescriptionController = TextEditingController();
 
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('New Task'),
-        content: TextField(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+        children: [TextField(
           controller: taskTitleController,
           decoration: const InputDecoration(hintText: 'Task title'),
         ),
+          TextField(
+            controller: taskDescriptionController,
+            decoration: const InputDecoration(hintText: 'Task description'),
+          ),
+          ]
+      ),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -39,6 +50,7 @@ class _ProjectPageState extends State<ProjectPage> {
           TextButton(
             onPressed: () async {
               final title = taskTitleController.text.trim();
+              final description = taskDescriptionController.text.trim();
               if (title.isNotEmpty) {
                 await firestore
                     .collection('users')
@@ -48,6 +60,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     .collection('tasks')
                     .add({
                   'title': title,
+                  'description': description,
                   'createdAt': FieldValue.serverTimestamp(),
                   'completed': false,
                 });
@@ -110,6 +123,36 @@ class _ProjectPageState extends State<ProjectPage> {
               final title = task['title'] ?? 'Untitled';
               final completed = task['completed'] as bool;
 
+
+              Future<void> viewTask() async {
+                final taskTitle = task['title'] ?? 'Untitled';
+                final taskDescription = task['description'] ?? 'No description';
+                final Timestamp? createdAtTimestamp = task['createdAt'];
+                final createdAt = createdAtTimestamp != null
+                    ? createdAtTimestamp.toDate().toString()
+                    : 'Unknown date';
+                await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(taskTitle),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Description: $taskDescription'),
+                        const SizedBox(height: 10),
+                        Text('Created at: $createdAt'),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              }
               return ListTile(
                 title: Text(
                   title,
@@ -122,6 +165,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   value: completed,
                   onChanged: (_) => toggleCompleted(task),
                 ),
+                onLongPress: viewTask,
               );
             },
           );
