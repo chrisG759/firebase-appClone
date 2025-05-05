@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'project_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> addProject() async {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController taskCountController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -111,7 +116,32 @@ class _HomePageState extends State<HomePage> {
               return Card(
                 child: ListTile(
                   title: Text(title),
-                  subtitle: Text(description),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(description),
+                      FutureBuilder<AggregateQuerySnapshot>(
+                          future: FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(user!.uid)
+                              .collection('projects')
+                              .doc(project.id)
+                              .collection('tasks')
+                              .count()
+                              .get(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Text('Loading...');
+                            } else if (snapshot.hasError) {
+                              return Text('Error');
+                            } else {
+                              final count = snapshot.data?.count ?? 0;
+                              return Text('$count', style: TextStyle(fontSize: 20),);
+                            }
+                          },
+                      )
+                    ],
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
