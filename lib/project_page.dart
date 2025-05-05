@@ -20,7 +20,6 @@ class _ProjectPageState extends State<ProjectPage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
-  // Add a new task to this project
   Future<void> addTask() async {
     final TextEditingController taskTitleController = TextEditingController();
 
@@ -62,7 +61,6 @@ class _ProjectPageState extends State<ProjectPage> {
     );
   }
 
-  // Get tasks stream
   Stream<QuerySnapshot> getTasksStream() {
     return firestore
         .collection('users')
@@ -74,7 +72,6 @@ class _ProjectPageState extends State<ProjectPage> {
         .snapshots();
   }
 
-  // Toggle task completed
   Future<void> toggleCompleted(DocumentSnapshot task) async {
     await firestore
         .collection('users')
@@ -101,7 +98,7 @@ class _ProjectPageState extends State<ProjectPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No tasks yet. Add one!'));
+            return const Center(child: Text('No tasks yet'));
           }
 
           final tasks = snapshot.data!.docs;

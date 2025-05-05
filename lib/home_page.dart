@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No projects yet. Add one!'));
+            return const Center(child: Text('No projects yet'));
           }
 
           final projects = snapshot.data!.docs;
