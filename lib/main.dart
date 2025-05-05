@@ -3,7 +3,7 @@ import 'package:firebase_app_clone/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'signup.dart';
-import 'login.dart';// Make sure this exists from flutterfire configure!
+import 'login.dart';
 import 'projects.dart';
 
 const Color backgroundColor = Color(0xFF7D8DE2);
@@ -20,10 +20,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       home: SignUpPage(),
     ),
-      home: const ProjectsPage(),
-    )
-  );
-}
+  );}
 
 class WelcomePage extends StatelessWidget{
   const WelcomePage({super.key});

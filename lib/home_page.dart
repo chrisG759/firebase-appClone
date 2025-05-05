@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> addProject() async {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
-    final TextEditingController taskCountController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -50,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               final title = titleController.text.trim();
               final description = descriptionController.text.trim();
-              if (title.isNotEmpty) {
+              if (title.isNotEmpty && description.isNotEmpty) {
                 await firestore
                     .collection('users')
                     .doc(user!.uid)
@@ -60,8 +59,17 @@ class _HomePageState extends State<HomePage> {
                   'description': description,
                   'createdAt': FieldValue.serverTimestamp(),
                 });
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please fill out all fields'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               }
-              Navigator.pop(context);
             },
             child: const Text('Add'),
           ),

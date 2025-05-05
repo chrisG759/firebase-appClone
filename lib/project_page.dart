@@ -30,18 +30,18 @@ class _ProjectPageState extends State<ProjectPage> {
       builder: (context) => AlertDialog(
         title: const Text('New Task'),
         content: Column(
-          mainAxisSize: MainAxisSize.min,
-        children: [TextField(
-          controller: taskTitleController,
-          decoration: const InputDecoration(hintText: 'Task title'),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: taskTitleController,
+                decoration: const InputDecoration(hintText: 'Task title'),
+              ),
+              TextField(
+                controller: taskDescriptionController,
+                decoration: const InputDecoration(hintText: 'Task description'),
+              ),
+            ]
         ),
-          TextField(
-            controller: taskDescriptionController,
-            decoration: const InputDecoration(hintText: 'Task description'),
-          ),
-          ]
-      ),
-
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -51,7 +51,7 @@ class _ProjectPageState extends State<ProjectPage> {
             onPressed: () async {
               final title = taskTitleController.text.trim();
               final description = taskDescriptionController.text.trim();
-              if (title.isNotEmpty) {
+              if (title.isNotEmpty && description.isNotEmpty) {
                 await firestore
                     .collection('users')
                     .doc(user!.uid)
@@ -64,8 +64,17 @@ class _ProjectPageState extends State<ProjectPage> {
                   'createdAt': FieldValue.serverTimestamp(),
                   'completed': false,
                 });
-              }
-              Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                    content: Text('Please fill out all fields'),
+              duration: Duration(seconds: 2),
+                    )
+                );
+                    }
             },
             child: const Text('Add'),
           ),
@@ -73,7 +82,6 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
     );
   }
-
   Stream<QuerySnapshot> getTasksStream() {
     return firestore
         .collection('users')
