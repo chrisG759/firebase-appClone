@@ -1,6 +1,7 @@
 import 'package:firebase_app_clone/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'home_page.dart';
 import 'signup.dart';
 
 const Color backgroundColor = Color(0xFF7D8DE2);
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Login successful! Redirecting...');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SignUpPage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     } on FirebaseAuthException catch (e) {

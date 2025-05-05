@@ -32,7 +32,6 @@ class _SignUpPageState extends State<SignUpPage> {
         password: passwordController.text.trim(),
       );
     } catch (e) {
-      // Handle errors here, like showing a dialog
       print('Error: $e');
     }
   }
