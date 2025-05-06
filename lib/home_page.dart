@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: const InputDecoration(hintText: 'Project Title'),
+                  decoration: const InputDecoration(hintText: 'Project Title', errorStyle: TextStyle(fontSize: 15),),
                   validator: (value){
                     if(value == null || value.isEmpty){
                       return "Please enter project title";
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextFormField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(hintText: 'Description'),
+                  decoration: const InputDecoration(hintText: 'Description', errorStyle: TextStyle(fontSize: 15),),
                   validator: (value) {
                     if(value == null || value.isEmpty){
                       return "Please enter project description";

@@ -44,7 +44,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       return null;
                     },
                     controller: taskTitleController,
-                    decoration: const InputDecoration(hintText: 'Task title'),
+                    decoration: const InputDecoration(hintText: 'Task title', errorStyle: TextStyle(fontSize: 15),),
                   ),
                   TextFormField(
                     validator: (value){
@@ -54,7 +54,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       return null;
                     },
                     controller: taskDescriptionController,
-                    decoration: const InputDecoration(hintText: 'Task description'),
+                    decoration: const InputDecoration(hintText: 'Task description', errorStyle: TextStyle(fontSize: 15),),
                   ),
                 ]
             )

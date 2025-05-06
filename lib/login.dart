@@ -118,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     controller: emailController,
                     decoration: const InputDecoration(
+                      errorStyle: TextStyle(fontSize: 20),
                       hintText: "Enter your email",
                       prefixIcon: Icon(Icons.email, color: Colors.grey),
                       filled: true,
@@ -143,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                       prefixIcon: Icon(Icons.lock, color: Colors.grey),
                       filled: true,
                       fillColor: Colors.white,
+                      errorStyle: TextStyle(fontSize: 20),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide.none,

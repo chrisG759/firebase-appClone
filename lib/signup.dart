@@ -79,6 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     prefixIcon: Icon(Icons.email, color: Colors.grey),
                     filled: true,
                     fillColor: Colors.white,
+                      errorStyle: TextStyle(fontSize: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       borderSide: BorderSide.none,
@@ -99,6 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     prefixIcon: Icon(Icons.lock, color: Colors.grey),
                     filled: true,
                     fillColor: Colors.white,
+                      errorStyle: TextStyle(fontSize: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       borderSide: BorderSide.none,
