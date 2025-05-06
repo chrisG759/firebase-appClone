@@ -19,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
+  final _formKey = GlobalKey<FormState>();
+
   Future<void> addProject() async {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
@@ -27,18 +29,33 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('New Project'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(hintText: 'Project Title'),
+        content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(hintText: 'Project Title'),
+                  validator: (value){
+                    if(value == null || value.isEmpty){
+                      return "Please enter project title";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(hintText: 'Description'),
+                  validator: (value) {
+                    if(value == null || value.isEmpty){
+                      return "Please enter project description";
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(hintText: 'Description'),
-            ),
-          ],
         ),
         actions: [
           TextButton(
@@ -49,7 +66,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               final title = titleController.text.trim();
               final description = descriptionController.text.trim();
-              if (title.isNotEmpty && description.isNotEmpty) {
+              if (_formKey.currentState!.validate()) {
                 await firestore
                     .collection('users')
                     .doc(user!.uid)
@@ -60,15 +77,6 @@ class _HomePageState extends State<HomePage> {
                   'createdAt': FieldValue.serverTimestamp(),
                 });
                 Navigator.pop(context);
-              } else {
-                Navigator.pop(context);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please fill out all fields'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
               }
             },
             child: const Text('Add'),

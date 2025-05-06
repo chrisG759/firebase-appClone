@@ -20,6 +20,8 @@ class _ProjectPageState extends State<ProjectPage> {
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
+  final _formKey = GlobalKey<FormState>();
+
 
   Future<void> addTask() async {
     final TextEditingController taskTitleController = TextEditingController();
@@ -29,18 +31,33 @@ class _ProjectPageState extends State<ProjectPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('New Task'),
-        content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: taskTitleController,
-                decoration: const InputDecoration(hintText: 'Task title'),
-              ),
-              TextField(
-                controller: taskDescriptionController,
-                decoration: const InputDecoration(hintText: 'Task description'),
-              ),
-            ]
+        content: Form(
+            key: _formKey,
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    validator: (value){
+                      if(value == null || value.isEmpty){
+                        return "Please enter task title";
+                      }
+                      return null;
+                    },
+                    controller: taskTitleController,
+                    decoration: const InputDecoration(hintText: 'Task title'),
+                  ),
+                  TextFormField(
+                    validator: (value){
+                      if(value == null || value.isEmpty){
+                        return "Please enter task description";
+                      }
+                      return null;
+                    },
+                    controller: taskDescriptionController,
+                    decoration: const InputDecoration(hintText: 'Task description'),
+                  ),
+                ]
+            )
         ),
         actions: [
           TextButton(
@@ -51,7 +68,7 @@ class _ProjectPageState extends State<ProjectPage> {
             onPressed: () async {
               final title = taskTitleController.text.trim();
               final description = taskDescriptionController.text.trim();
-              if (title.isNotEmpty && description.isNotEmpty) {
+              if (_formKey.currentState!.validate()) {
                 await firestore
                     .collection('users')
                     .doc(user!.uid)
@@ -65,16 +82,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   'completed': false,
                 });
                 Navigator.pop(context);
-              } else {
-                Navigator.pop(context);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                    content: Text('Please fill out all fields'),
-              duration: Duration(seconds: 2),
-                    )
-                );
-                    }
+              }
             },
             child: const Text('Add'),
           ),
